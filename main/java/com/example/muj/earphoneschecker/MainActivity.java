@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,14 +33,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void musicLaunch(View view){
-        try {
-            PackageManager packageManager = getPackageManager();
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent = packageManager.getLaunchIntentForPackage("com.cyanogenmod.eleven");
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            startActivity(intent);
-        }catch(Exception e){
-            Toast.makeText(this, "Error in launching music player", Toast.LENGTH_SHORT).show();
+        //To launch the specific package (for CyanogenMod Eleven Music Player)
+//        try {
+//            PackageManager packageManager = getPackageManager();
+//            Intent intent = new Intent(Intent.ACTION_MAIN);
+//            intent = packageManager.getLaunchIntentForPackage("com.cyanogenmod.eleven");
+//            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//            startActivity(intent);
+//        }catch(Exception e){
+//            Toast.makeText(this, "Error in launching music player", Toast.LENGTH_SHORT).show();
+//        }
+
+        //To launch the default music player app on any phone.
+
+        if(Build.VERSION.SDK_INT>=15) {
+            try {
+                Intent intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "Error opening music app", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else{
+            try{
+                Intent intent=new Intent("android.intent.action.MUSIC_PLAYER");
+            } catch (Exception e){
+                Toast.makeText(this, "Error opening music app", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
